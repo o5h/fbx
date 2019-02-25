@@ -1,2 +1,2 @@
-# fbx
+# FBX
 Golang FBX file reader
