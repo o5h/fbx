@@ -41,20 +41,24 @@ func (p *Property) AsFloat64() float64 {
 	return p.Data.(float64)
 }
 
-func (p *Property) AsFloat32Slice() []float32 {
-	return p.Data.(*Array).Data.([]float32)
+func (p *Property) AsFloat32Slice() (a []float32, ok bool) {
+	a, ok = p.Data.(*Array).Data.([]float32)
+	return
 }
 
-func (p *Property) AsFloat64Slice() []float64 {
-	return p.Data.(*Array).Data.([]float64)
+func (p *Property) AsFloat64Slice() (a []float64, ok bool) {
+	a, ok = p.Data.(*Array).Data.([]float64)
+	return
 }
 
-func (p *Property) AsInt32Slice() []int32 {
-	return p.Data.(*Array).Data.([]int32)
+func (p *Property) AsInt32Slice() (a []int32, ok bool) {
+	a, ok = p.Data.(*Array).Data.([]int32)
+	return
 }
 
-func (p *Property) AsInt64Slice() []int64 {
-	return p.Data.(*Array).Data.([]int64)
+func (p *Property) AsInt64Slice() (a []int64, ok bool) {
+	a, ok = p.Data.(*Array).Data.([]int64)
+	return
 }
 
 func (p *Property) String() string {

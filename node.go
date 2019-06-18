@@ -40,6 +40,30 @@ func (node *Node) Filter(f NodeFilter) (nodes []*Node) {
 	return
 }
 
+func (node *Node) Int32Slice(name string) ([]int32, bool) {
+	nodes := node.FilterName(name)
+	if len(nodes) != 1 {
+		return nil, false
+	}
+	properties := nodes[0].Properties
+	if len(properties) != 1 {
+		return nil, false
+	}
+	return properties[0].AsInt32Slice()
+}
+
+func (node *Node) Float64Slice(name string) ([]float64, bool) {
+	nodes := node.FilterName(name)
+	if len(nodes) != 1 {
+		return nil, false
+	}
+	properties := nodes[0].Properties
+	if len(properties) != 1 {
+		return nil, false
+	}
+	return properties[0].AsFloat64Slice()
+}
+
 func (n *Node) String() string {
 	b := strings.Builder{}
 	b.WriteString(n.Name)
