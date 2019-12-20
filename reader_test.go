@@ -18,15 +18,15 @@ func TestRead(t *testing.T) {
 	reader.ReadFrom(f)
 
 	cur, _ := f.Seek(0, io.SeekCurrent)
-	assert.Eq(t, reader.Position, cur)
+	assert.Eq(t, "", reader.Position, cur)
 
 	fbxData := reader.FBX
 	ibo := fbxData.Filter(fbx.FilterName("PolygonVertexIndex"))[0]
-	iboData := ibo.Properties[0].AsInt32Slice()
+	iboData, _ := ibo.Properties[0].AsInt32Slice()
 
 	t.Log(fbxData)
 
-	assert.Eq(t, iboData, []int32{
+	assert.Eq(t, "", iboData, []int32{
 		0, 2, -4,
 		7, 5, -5,
 		4, 1, -1,
@@ -41,7 +41,7 @@ func TestRead(t *testing.T) {
 		0, 3, -8})
 
 	vbo := fbxData.Filter(fbx.FilterName("Vertices"))[0]
-	vboData := vbo.Properties[0].AsFloat64Slice()
+	vboData, _ := vbo.Properties[0].AsFloat64Slice()
 
 	assert.EqSlice(t, vboData, []float64{
 		1, 0.999999940395355, -1,
