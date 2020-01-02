@@ -43,6 +43,27 @@ func (fr *FBXReader) ReadFrom(r io.Reader) (n int64, err error) {
 	return
 }
 
+func (fr *FBXReader) ReadEndOffset(r io.Reader) uint64 {
+	if fr.FBX.Header.Version() >= 7500 {
+		return fr.readUint64(r)
+	}
+	return uint64(fr.readUint32(r))
+}
+
+func (fr *FBXReader) ReadNumProperties(r io.Reader) uint64 {
+	if fr.FBX.Header.Version() >= 7500 {
+		return fr.readUint64(r)
+	}
+	return uint64(fr.readUint32(r))
+}
+
+func (fr *FBXReader) ReadPropertyListLen(r io.Reader) uint64 {
+	if fr.FBX.Header.Version() >= 7500 {
+		return fr.readUint64(r)
+	}
+	return uint64(fr.readUint32(r))
+}
+
 func (fr *FBXReader) ReadHeaderFrom(r io.Reader) (header *Header) {
 	header = &Header{}
 	var i int
@@ -54,17 +75,17 @@ func (fr *FBXReader) ReadHeaderFrom(r io.Reader) (header *Header) {
 func (fr *FBXReader) ReadNodeFrom(r io.Reader) (node *Node) {
 	node = &Node{}
 
-	node.EndOffset = fr.readUint32(r)
+	node.EndOffset = fr.ReadEndOffset(r)
 	if fr.Error != nil {
 		return
 	}
 
-	node.NumProperties = fr.readUint32(r)
+	node.NumProperties = fr.ReadNumProperties(r)
 	if fr.Error != nil {
 		return
 	}
 
-	node.PropertyListLen = fr.readUint32(r)
+	node.PropertyListLen = fr.ReadPropertyListLen(r)
 	if fr.Error != nil {
 		return
 	}
@@ -87,7 +108,7 @@ func (fr *FBXReader) ReadNodeFrom(r io.Reader) (node *Node) {
 		return
 	}
 
-	for np := uint32(0); np < node.NumProperties; np++ {
+	for np := uint64(0); np < node.NumProperties; np++ {
 		p := fr.ReadPropertyFrom(r)
 		if fr.Error != nil {
 			return
@@ -239,6 +260,13 @@ func uncompress(b []byte, data interface{}) error {
 	defer r.Close()
 	err = binary.Read(r, binary.LittleEndian, data)
 	return err
+}
+
+func (fr *FBXReader) readUint64(r io.Reader) uint64 {
+	var data uint64
+	fr.Error = binary.Read(r, binary.LittleEndian, &data)
+	fr.Position += 8
+	return data
 }
 
 func (fr *FBXReader) readUint32(r io.Reader) uint32 {
