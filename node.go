@@ -6,9 +6,9 @@ import (
 )
 
 type Node struct {
-	EndOffset       uint32
-	NumProperties   uint32
-	PropertyListLen uint32
+	EndOffset       uint64
+	NumProperties   uint64
+	PropertyListLen uint64
 	NameLen         uint8
 	Name            string
 	Properties      []*Property
