@@ -337,7 +337,8 @@ func (fr *FBXReader) readString(r io.Reader) string {
 		return ""
 	}
 	fr.Position += int64(i)
-	return string(bb)
+	str := string(bb)
+	return str
 }
 
 func (fr *FBXReader) readBytes(r io.Reader) []byte {

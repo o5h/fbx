@@ -77,3 +77,48 @@ func (n *Node) String() string {
 	b.WriteString("\n")
 	return b.String()
 }
+
+func (node *Node) GetNode(name string) *Node {
+	for _, n := range node.NestedNodes {
+		if n.Name == name {
+			return n
+		}
+	}
+	return nil
+}
+
+func (node *Node) GetInt32Slice(name string) []int32 {
+	nn := node.GetNode(name)
+	if nn == nil {
+		return nil
+	}
+
+	if len(nn.Properties) < 1 {
+		return nil
+	}
+
+	if nn.Properties[0].TypeCode != 'i' {
+		return nil
+	}
+
+	a, _ := nn.Properties[0].AsInt32Slice()
+	return a
+}
+
+func (node *Node) GetFloat64Slice(name string) []float64 {
+	nn := node.GetNode(name)
+	if nn == nil {
+		return nil
+	}
+
+	if len(nn.Properties) < 1 {
+		return nil
+	}
+
+	if nn.Properties[0].TypeCode != 'd' {
+		return nil
+	}
+
+	a, _ := nn.Properties[0].AsFloat64Slice()
+	return a
+}

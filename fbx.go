@@ -13,6 +13,15 @@ func (f *FBX) ReadFrom(r io.Reader) (int64, error) {
 	return reader.ReadFrom(r)
 }
 
+func (f *FBX) GetNode(name string) *Node {
+	for _, node := range f.Nodes {
+		if node.Name == name {
+			return node
+		}
+	}
+	return nil
+}
+
 func (f *FBX) Filter(filter NodeFilter) (nodes []*Node) {
 	for _, node := range f.Nodes {
 		subNodes := node.Filter(filter)
