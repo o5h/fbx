@@ -20,13 +20,13 @@ func NewReader() *FBXReader {
 
 func (fr *FBXReader) ReadFrom(r io.Reader) (n int64, err error) {
 	fr.FBX.Header = fr.ReadHeaderFrom(r)
-	if err != nil {
-		return
+	if fr.Error != nil {
+		return fr.Position, fr.Error
 	}
 
 	fr.FBX.Top = fr.ReadNodeFrom(r)
 	if fr.Error != nil {
-		return
+		return fr.Position, fr.Error
 	}
 
 	for {
@@ -40,7 +40,7 @@ func (fr *FBXReader) ReadFrom(r io.Reader) (n int64, err error) {
 		fr.FBX.Nodes = append(fr.FBX.Nodes, node)
 	}
 
-	return
+	return fr.Position, fr.Error
 }
 
 func (fr *FBXReader) ReadEndOffset(r io.Reader) uint64 {
