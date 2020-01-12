@@ -1,9 +1,16 @@
 package fbx
 
+import "io"
+
 type FBX struct {
 	Header *Header
 	Top    *Node
 	Nodes  []*Node
+}
+
+func (f *FBX) ReadFrom(r io.Reader) (int64, error) {
+	reader := &FBXReader{f, 0, nil}
+	return reader.ReadFrom(r)
 }
 
 func (f *FBX) Filter(filter NodeFilter) (nodes []*Node) {

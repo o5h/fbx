@@ -14,13 +14,12 @@ func TestRead(t *testing.T) {
 
 	defer f.Close()
 
-	reader := fbx.NewReader()
-	reader.ReadFrom(f)
-
+	fbxData := &fbx.FBX{}
+	n, err := fbxData.ReadFrom(f)
+	assert.Nil(t, "No errors", err)
 	cur, _ := f.Seek(0, io.SeekCurrent)
-	assert.Eq(t, "", reader.Position, cur)
+	assert.Eq(t, "Read til EOF", n, cur)
 
-	fbxData := reader.FBX
 	ibo := fbxData.Filter(fbx.FilterName("PolygonVertexIndex"))[0]
 	iboData, _ := ibo.Properties[0].AsInt32Slice()
 

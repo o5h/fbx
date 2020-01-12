@@ -4,8 +4,14 @@ import (
 	"fmt"
 )
 
+type PropertyType byte
+
+func (t PropertyType) String() string {
+	return string([]byte{byte(t)})
+}
+
 type Property struct {
-	TypeCode byte
+	TypeCode PropertyType
 	Data     interface{}
 }
 
@@ -62,5 +68,5 @@ func (p *Property) AsInt64Slice() (a []int64, ok bool) {
 }
 
 func (p *Property) String() string {
-	return fmt.Sprintf("%v", p.Data)
+	return fmt.Sprintf("'%v:%v'", p.TypeCode, p.Data)
 }

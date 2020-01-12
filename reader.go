@@ -137,7 +137,7 @@ func (fr *FBXReader) ReadNodeFrom(r io.Reader) (node *Node) {
 func (fr *FBXReader) ReadPropertyFrom(r io.Reader) (p *Property) {
 	var nn int64
 	p = &Property{}
-	p.TypeCode = fr.readUint8(r)
+	p.TypeCode = PropertyType(fr.readUint8(r))
 
 	switch p.TypeCode {
 	case 'S':
