@@ -16,16 +16,16 @@ func TestRead(t *testing.T) {
 
 	fbxData := &fbx.FBX{}
 	n, err := fbxData.ReadFrom(f)
-	assert.Nil(t, "No errors", err)
+	assert.Nil(t, err, "No errors")
 	cur, _ := f.Seek(0, io.SeekCurrent)
-	assert.Eq(t, "Read til EOF", n, cur)
+	assert.Eq(t, n, cur, "Read til EOF")
 
 	ibo := fbxData.Filter(fbx.FilterName("PolygonVertexIndex"))[0]
 	iboData, _ := ibo.Properties[0].AsInt32Slice()
 
 	t.Log(fbxData)
 
-	assert.Eq(t, "", iboData, []int32{
+	assert.EqSlice(t, iboData, []int32{
 		0, 2, -4,
 		7, 5, -5,
 		4, 1, -1,
@@ -42,7 +42,7 @@ func TestRead(t *testing.T) {
 	vbo := fbxData.Filter(fbx.FilterName("Vertices"))[0]
 	vboData, _ := vbo.Properties[0].AsFloat64Slice()
 
-	assert.EqSlice(t, vboData, []float64{
+	assert.EqSliceEpsilon(t, vboData, []float64{
 		1, 0.999999940395355, -1,
 		1, -1, -1,
 		-1.00000011920929, -0.999999821186066,
@@ -61,7 +61,7 @@ func TestRead2(t *testing.T) {
 	fbxData.ReadFrom(f)
 	geom := fbxData.GetNode("Objects").GetNode("Geometry")
 	ibo := geom.GetInt32Slice("PolygonVertexIndex")
-	assert.Eq(t, "", ibo, []int32{
+	assert.EqSlice(t, ibo, []int32{
 		0, 2, -4,
 		7, 5, -5,
 		4, 1, -1,
@@ -76,7 +76,7 @@ func TestRead2(t *testing.T) {
 		0, 3, -8})
 	vbo := geom.GetFloat64Slice("Vertices")
 
-	assert.EqSlice(t, vbo, []float64{
+	assert.EqSliceEpsilon(t, vbo, []float64{
 		1, 0.999999940395355, -1,
 		1, -1, -1,
 		-1.00000011920929, -0.999999821186066,

@@ -9,7 +9,7 @@ type FBX struct {
 }
 
 func (f *FBX) ReadFrom(r io.Reader) (int64, error) {
-	reader := &FBXReader{f, 0, nil}
+	reader := &Reader{f, 0, nil}
 	return reader.ReadFrom(r)
 }
 

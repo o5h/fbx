@@ -8,17 +8,17 @@ import (
 	"io"
 )
 
-type FBXReader struct {
+type Reader struct {
 	FBX      *FBX
 	Position int64
 	Error    error
 }
 
-func NewReader() *FBXReader {
-	return &FBXReader{&FBX{}, 0, nil}
+func NewReader() *Reader {
+	return &Reader{&FBX{}, 0, nil}
 }
 
-func (fr *FBXReader) ReadFrom(r io.Reader) (n int64, err error) {
+func (fr *Reader) ReadFrom(r io.Reader) (n int64, err error) {
 	fr.FBX.Header = fr.ReadHeaderFrom(r)
 	if fr.Error != nil {
 		return fr.Position, fr.Error
@@ -43,28 +43,28 @@ func (fr *FBXReader) ReadFrom(r io.Reader) (n int64, err error) {
 	return fr.Position, fr.Error
 }
 
-func (fr *FBXReader) ReadEndOffset(r io.Reader) uint64 {
+func (fr *Reader) ReadEndOffset(r io.Reader) uint64 {
 	if fr.FBX.Header.Version() >= 7500 {
 		return fr.readUint64(r)
 	}
 	return uint64(fr.readUint32(r))
 }
 
-func (fr *FBXReader) ReadNumProperties(r io.Reader) uint64 {
+func (fr *Reader) ReadNumProperties(r io.Reader) uint64 {
 	if fr.FBX.Header.Version() >= 7500 {
 		return fr.readUint64(r)
 	}
 	return uint64(fr.readUint32(r))
 }
 
-func (fr *FBXReader) ReadPropertyListLen(r io.Reader) uint64 {
+func (fr *Reader) ReadPropertyListLen(r io.Reader) uint64 {
 	if fr.FBX.Header.Version() >= 7500 {
 		return fr.readUint64(r)
 	}
 	return uint64(fr.readUint32(r))
 }
 
-func (fr *FBXReader) ReadHeaderFrom(r io.Reader) (header *Header) {
+func (fr *Reader) ReadHeaderFrom(r io.Reader) (header *Header) {
 	header = &Header{}
 	var i int
 	i, fr.Error = r.Read(header[:])
@@ -72,7 +72,7 @@ func (fr *FBXReader) ReadHeaderFrom(r io.Reader) (header *Header) {
 	return
 }
 
-func (fr *FBXReader) ReadNodeFrom(r io.Reader) (node *Node) {
+func (fr *Reader) ReadNodeFrom(r io.Reader) (node *Node) {
 	node = &Node{}
 
 	node.EndOffset = fr.ReadEndOffset(r)
@@ -134,7 +134,7 @@ func (fr *FBXReader) ReadNodeFrom(r io.Reader) (node *Node) {
 	return node
 }
 
-func (fr *FBXReader) ReadPropertyFrom(r io.Reader) (p *Property) {
+func (fr *Reader) ReadPropertyFrom(r io.Reader) (p *Property) {
 	var nn int64
 	p = &Property{}
 	p.TypeCode = PropertyType(fr.readUint8(r))
@@ -200,7 +200,7 @@ func (fr *FBXReader) ReadPropertyFrom(r io.Reader) (p *Property) {
 	return
 }
 
-func (fr *FBXReader) readArrayHeader(r io.Reader, a *Array) {
+func (fr *Reader) readArrayHeader(r io.Reader, a *Array) {
 	a.ArrayLength = fr.readUint32(r)
 	if fr.Error != nil {
 		return
@@ -217,7 +217,7 @@ func (fr *FBXReader) readArrayHeader(r io.Reader, a *Array) {
 	return
 }
 
-func (fr *FBXReader) readArray(r io.Reader, size uint32, slicer func(len uint32) interface{}) *Array {
+func (fr *Reader) readArray(r io.Reader, size uint32, slicer func(len uint32) interface{}) *Array {
 	a := &Array{}
 	fr.readArrayHeader(r, a)
 	if fr.Error != nil {
@@ -262,70 +262,70 @@ func uncompress(b []byte, data interface{}) error {
 	return err
 }
 
-func (fr *FBXReader) readUint64(r io.Reader) uint64 {
+func (fr *Reader) readUint64(r io.Reader) uint64 {
 	var data uint64
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position += 8
 	return data
 }
 
-func (fr *FBXReader) readUint32(r io.Reader) uint32 {
+func (fr *Reader) readUint32(r io.Reader) uint32 {
 	var data uint32
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position += 4
 	return data
 }
 
-func (fr *FBXReader) readUint8(r io.Reader) uint8 {
+func (fr *Reader) readUint8(r io.Reader) uint8 {
 	var data uint8
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position++
 	return data
 }
 
-func (fr *FBXReader) readInt16(r io.Reader) int16 {
+func (fr *Reader) readInt16(r io.Reader) int16 {
 	var data int16
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position += 2
 	return data
 }
 
-func (fr *FBXReader) readInt32(r io.Reader) int32 {
+func (fr *Reader) readInt32(r io.Reader) int32 {
 	var data int32
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position += 4
 	return data
 }
 
-func (fr *FBXReader) readFloat32(r io.Reader) float32 {
+func (fr *Reader) readFloat32(r io.Reader) float32 {
 	var data float32
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position += 4
 	return data
 }
 
-func (fr *FBXReader) readFloat64(r io.Reader) float64 {
+func (fr *Reader) readFloat64(r io.Reader) float64 {
 	var data float64
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position += 8
 	return data
 }
 
-func (fr *FBXReader) readInt64(r io.Reader) int64 {
+func (fr *Reader) readInt64(r io.Reader) int64 {
 	var data int64
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position += 8
 	return data
 }
 
-func (fr *FBXReader) readInt8(r io.Reader) int8 {
+func (fr *Reader) readInt8(r io.Reader) int8 {
 	var data int8
 	fr.Error = binary.Read(r, binary.LittleEndian, &data)
 	fr.Position++
 	return data
 }
 
-func (fr *FBXReader) readString(r io.Reader) string {
+func (fr *Reader) readString(r io.Reader) string {
 	len := fr.readUint32(r)
 	if fr.Error != nil {
 		return ""
@@ -341,7 +341,7 @@ func (fr *FBXReader) readString(r io.Reader) string {
 	return str
 }
 
-func (fr *FBXReader) readBytes(r io.Reader) []byte {
+func (fr *Reader) readBytes(r io.Reader) []byte {
 	len := fr.readUint32(r)
 	if fr.Error != nil {
 		return nil
