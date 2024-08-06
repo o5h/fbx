@@ -1,4 +1,2 @@
-github.com/o5h/testing v0.0.0-20191012012753-5a8885a727da h1:NHUnreAGsdK1GJYvhd88I7Na7K90GP5KDrvy6Twhp3A=
-github.com/o5h/testing v0.0.0-20191012012753-5a8885a727da/go.mod h1:3OvJNEh5yt6HAk9x3vrWhX/kZYXqjy6vRmghCzxDJPo=
-github.com/o5h/testing v0.0.0-20230919220321-ad3ead01f940 h1:CXuaqlbs0pyH2QbAV8kzjs3Cq654D+ufzD1PmTH6w6g=
-github.com/o5h/testing v0.0.0-20230919220321-ad3ead01f940/go.mod h1:3CMSs9cTmqfMA/OZBs9ED/ucLD4nO41WracE0tO6098=
+github.com/o5h/testing v0.1.0 h1:t/ERUDF/qXqhKgbtXav7F1Q5LbZT5AiYQCsDYDuMP04=
+github.com/o5h/testing v0.1.0/go.mod h1:zMt5z7GkpAtg5HnPCXikvD8yVP1IIOZwoDnnH0UbRKE=
